@@ -37,7 +37,7 @@ regd_users.post("/login", (req,res) => {
         // Generate JWT access token
         let accessToken = jwt.sign({
             data: password
-        }, 'access', { expiresIn: 60 });
+        }, 'access', { expiresIn: 60*60 });
 
         // Store access token and username in session
         req.session.authorization = {
@@ -51,8 +51,34 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const isbn = req.params.isbn;
+    const reviewTitle = req.body.reviewTitle;
+    const reviewBody = req.body.reviewBody;
+    const user = req.session.authorization.username;
+
+    if (isbn && user){
+        const book = books[isbn];
+        const reviews = book.reviews;
+        reviews[isbn] = {"User": user,"Title":reviewTitle,"Body": reviewBody};
+        res.send(JSON.stringify(reviews));
+    }
+    else{
+        res.send("isbn Key error")
+    }
+});
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    const user = req.session.authorization.username;
+
+    if (isbn && user){
+        const book = books[isbn];
+        const reviews = book.reviews;
+        delete reviews[isbn];
+        res.send("Deleted Review");
+    }
+    else{
+        res.send("isbn Key error")
+    }
 });
 
 module.exports.authenticated = regd_users;

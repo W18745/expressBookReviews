@@ -37,53 +37,61 @@ public_users.post("/register", (req,res) => {
     return res.status(404).json({message: "Unable to register user."});
 });
 
-// Get the book list available in the shop
+// Get the book list available in the shop //Task 10
 public_users.get('/',function (req, res) {
   // Send JSON response with formatted friends data
-    res.send(JSON.stringify(books,null,4));
+  return new Promise((resolve, reject) => {
+    resolve (res.send(JSON.stringify(books,null,4)));
+  })
+    
 });
 
-// Get book details based on ISBN
+// Get book details based on ISBN //Task 11
 public_users.get('/isbn/:isbn',function (req, res) {
     isbn = req.params.isbn;
-    if(isbn && books[isbn]){
-        res.send(JSON.stringify(books[isbn],null,4));
-    }
-    else{
-          res.send(`Invalid ISBN`);
-    }
-    
+    return new Promise((resolve, reject) => {
+        if(isbn && books[isbn]){
+            resolve(res.send(JSON.stringify(books[isbn],null,4)));
+        }
+        else{
+            resolve(res.send(`Invalid ISBN`));
+        } 
+        })
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
-    if (author){
-        const bookArray = Object.keys(books).map(key => {
-              return {[key]:books[key]};
-          });
-        const filterbooks = bookArray.filter(e=>Object.values(e)[0].author === author);
-        res.send(JSON.stringify(filterbooks,null,4));
-    }
-    else{
-        res.send("Authour Key error")
-    }
-  
+    return new Promise((resolve, reject) => {
+        if (author){
+            const bookArray = Object.keys(books).map(key => {
+                  return {[key]:books[key]};
+              });
+            const filterbooks = bookArray.filter(e=>Object.values(e)[0].author === author);
+            resolve(res.send(JSON.stringify(filterbooks,null,4)));
+        }
+        else{
+            resolve(res.send("Authour Key error"));
+        }
+        })
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
-    if (title){
-        const bookArray = Object.keys(books).map(key => {
-              return {[key]:books[key]};
-          });
-        const filterbooks = bookArray.filter(e=>Object.values(e)[0].title === title);
-        res.send(JSON.stringify(filterbooks,null,4));
-    }
-    else{
-        res.send("Title Key error")
-    }
+    return new Promise((resolve, reject) => {
+        if (title){
+            const bookArray = Object.keys(books).map(key => {
+                  return {[key]:books[key]};
+              });
+            const filterbooks = bookArray.filter(e=>Object.values(e)[0].title === title);
+            resolve(res.send(JSON.stringify(filterbooks,null,4)));
+        }
+        else{
+            resolve(res.send("Title Key error"));
+        }
+        })
+    
 });
 
 //  Get book review

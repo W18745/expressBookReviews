@@ -65,20 +65,35 @@ public_users.get('/isbn/:isbn',function (req, res) {
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-    const author = req.params.author;
-    return new Promise((resolve, reject) => {
-        if (author){
-            const bookArray = Object.keys(books).map(key => {
-                  return {[key]:books[key]};
-              });
-            const filterbooks = bookArray.filter(e=>Object.values(e)[0].author === author);
-            resolve(res.send(JSON.stringify(filterbooks,null,4)));
+public_users.get('/author/:author', async (req, res) => {
+    try {
+        const author = req.params.author;
+
+        if (!author) {
+            return res.status(404).json({ message: "Invalid Author" });
         }
-        else{
-            resolve(res.status(404).json({message: "Invalid Author"});
-        }
-        })
+
+        // Example: fetch books from an API endpoint
+        const response = await axios.get('http://localhost:5000/');
+
+        const books = response.data;
+
+        const bookArray = Object.keys(books).map(key => ({
+            [key]: books[key]
+        }));
+
+        const filterbooks = bookArray.filter(
+            e => Object.values(e)[0].author === author
+        );
+
+        return res.json(filterbooks);
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error fetching books",
+            error: error.message
+        });
+    }
 });
 
 // Get all books based on title

@@ -68,10 +68,12 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author', async (req, res) => {
     try {
         const author = req.params.author;
-
+        //Author Data validation
         if (!author) {
-            return res.status(404).json({ message: "Invalid Author" });
+            return res.status(404).json({ message: "Error: Invalid Author" });
         }
+        else if(author == ""){
+            return res.status(404).json({ message: "Error: Blank Authour" });
 
         // Example: fetch books from an API endpoint
         const response = await axios.get('http://localhost:5000/');

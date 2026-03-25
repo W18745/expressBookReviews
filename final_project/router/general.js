@@ -76,7 +76,7 @@ public_users.get('/author/:author',function (req, res) {
             resolve(res.send(JSON.stringify(filterbooks,null,4)));
         }
         else{
-            resolve(res.send("Authour Key error"));
+            resolve(res.status(404).json({message: "Invalid Author"});
         }
         })
 });
@@ -93,7 +93,7 @@ public_users.get('/title/:title',function (req, res) {
             resolve(res.send(JSON.stringify(filterbooks,null,4)));
         }
         else{
-            resolve(res.send("Title Key error"));
+            resolve(res.status(404).json({message: "Error: Title not Found"});
         }
         })
     
@@ -108,7 +108,7 @@ public_users.get('/review/:isbn',function (req, res) {
         res.send(JSON.stringify(reviews));
     }
     else{
-        res.send("isbn Key error")
+        res.status(404).json({message: "Error: ISBN not found"}
     }
 });
 
